@@ -1,10 +1,39 @@
-class NumersDescription{
+class NumbersDescription{
+    constructor(maxNumber){
+        this.maxNumber = maxNumber;
+    }
 
+    addScores(groupingElement){
+        [...Array(this.maxNumber).keys()].map((_, i) => {
+            let textElem = document.createElement('h3');
+            textElem.textContent = `${i+1}`;
+            groupingElement.appendChild(textElem);
+        });
+        return groupingElement;
+    }
 }
 
 class RadioSelector{
-    addScores(groupingElement){
 
+    constructor(maxNumber, rowsCount){
+        this.maxNumber = maxNumber;
+        this.rowsCount = rowsCount;
+    }
+
+    addScores(groupingElement){
+        let scoresRange = [...Array(this.maxNumber).keys()].map((_, i) => i + 1);
+        let groupName = `row${this.rowsCount}`;
+        let median = Math.floor(scoresRange.length/2);
+        scoresRange.forEach( (_, i) => {
+            let radioSelector = document.createElement('input');
+            radioSelector.type = 'radio';
+            radioSelector.name = groupName;
+            radioSelector.id = groupName + i;
+            if( i == median ) radioSelector.checked = true;
+            groupingElement.appendChild(radioSelector);
+        });
+
+        return groupingElement;
     }
 }
 
@@ -16,7 +45,7 @@ class SatisfactionForm{
         if( maxScaleNumber%2 == 0 ){
             throw new Error("Can't use even numbers in scale since there's no option for neutral answers");
         }
-
+        console.log('ola')
         this.root = root;
         this.questions = questions;
         this.maxScaleNumber = maxScaleNumber;
@@ -35,7 +64,8 @@ class SatisfactionForm{
             rowElem.classList.add('form-question');
 
             this.addQuestion(rowElem, question);
-            this.addScoreSelection(rowElem);
+            this.addScoreSelection(rowElem, 
+                                   new RadioSelector(this.maxScaleNumber, this.rowsCount));
 
             this.container.appendChild(rowElem);
         });
@@ -54,8 +84,10 @@ class SatisfactionForm{
             head.classList.add(classStr) 
         });
         
-        this.addQuestion(rowElement, description)
-        this.addScoreSelection();
+        this.addQuestion(head, description)
+        this.addScoreSelection(head,
+                               new NumbersDescription(this.maxScaleNumber));
+
         this.container.appendChild(head);
     }
 
@@ -67,28 +99,28 @@ class SatisfactionForm{
         rowElement.appendChild(question)
     }
 
-    addScoreSelection(rowElement){
+    addScoreSelection(rowElement, groupType){
         let scoresContainer = document.createElement('div');
-        scoresContainer.classList.add('form-scores');
-        let selectorGroupElement = this.addScores(scoresContainer);
+        scoresContainer.classList.add('form-scores')
+        let selectorGroupElement = groupType.addScores(scoresContainer);
         rowElement.appendChild(selectorGroupElement)
     }
 
-    addScores(selectorGroupElement){
-        let scoresRange = [...Array(this.maxScaleNumber).keys()].map((_, i) => i + 1);
-        let groupName = `row${this.rowsCount}`;
-        let median = Math.floor(scoresRange.length/2);
-        scoresRange.forEach( (_, i) => {
-            let radioSelector = document.createElement('input');
-            radioSelector.type = 'radio';
-            radioSelector.name = groupName;
-            radioSelector.id = groupName + i;
-            if( i == median ) radioSelector.checked = true;
-            selectorGroupElement.appendChild(radioSelector);
-        });
+    // addScores(selectorGroupElement){
+    //     let scoresRange = [...Array(this.maxScaleNumber).keys()].map((_, i) => i + 1);
+    //     let groupName = `row${this.rowsCount}`;
+    //     let median = Math.floor(scoresRange.length/2);
+    //     scoresRange.forEach( (_, i) => {
+    //         let radioSelector = document.createElement('input');
+    //         radioSelector.type = 'radio';
+    //         radioSelector.name = groupName;
+    //         radioSelector.id = groupName + i;
+    //         if( i == median ) radioSelector.checked = true;
+    //         selectorGroupElement.appendChild(radioSelector);
+    //     });
 
-        return selectorGroupElement;
-    }
+    //     return selectorGroupElement;
+    // }
 }
 
 let myRoot = document.getElementById("subsection");
