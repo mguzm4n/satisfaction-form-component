@@ -39,14 +39,16 @@ class RadioSelector{
 
 class SatisfactionForm{
     constructor(root, questions, maxScaleNumber){
-        if( maxScaleNumber < 5 || maxScaleNumber > 9 ){
+        if( maxScaleNumber < 3 || maxScaleNumber > 9 ){
             throw new Error("Maximum score too low or too big for a Likert scale");
         }
         if( maxScaleNumber%2 == 0 ){
             throw new Error("Can't use even numbers in scale since there's no option for neutral answers");
         }
-        console.log('ola')
+        
         this.root = root;
+        this.root.style.setProperty('--scaleNumber', maxScaleNumber);
+
         this.questions = questions;
         this.maxScaleNumber = maxScaleNumber;
         this.rowsCount = 0;
@@ -133,4 +135,4 @@ let firstFormQuestions = ["Me siento agusto utilizando la aplicación",
                            integradas",
                           "Creo que utilizaría esta app con frecuencia"];
 
-let firstForm = new SatisfactionForm(myRoot, firstFormQuestions, 5);
+let firstForm = new SatisfactionForm(myRoot, firstFormQuestions, 9);
