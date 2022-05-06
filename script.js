@@ -1,3 +1,13 @@
+class NumersDescription{
+
+}
+
+class RadioSelector{
+    addScores(groupingElement){
+
+    }
+}
+
 class SatisfactionForm{
     constructor(root, questions, maxScaleNumber){
         if( maxScaleNumber < 5 || maxScaleNumber > 9 ){
@@ -12,16 +22,15 @@ class SatisfactionForm{
         this.maxScaleNumber = maxScaleNumber;
         this.rowsCount = 0;
         this.setupContainer()
-        // this.setupHeader()
-
-        
-        //this.setupQuestion(rowElement, questions[0])
+        this.setupHeader('Question\'s general description')
         this.setupRows()
 
     }
 
     setupRows(){
         this.questions.forEach(question => {
+            this.rowsCount += 1;
+
             let rowElem = document.createElement('div')
             rowElem.classList.add('form-question');
 
@@ -39,20 +48,17 @@ class SatisfactionForm{
         this.container = container;
     }
 
-    setupHeader(){
+    setupHeader(description){
         let head = document.createElement('div');
         ['form-question', 'form-header'].forEach( classStr => {
             head.classList.add(classStr) 
         });
         
-        this.addRowContent(head);
+        this.addQuestion(rowElement, description)
+        this.addScoreSelection();
         this.container.appendChild(head);
     }
 
-    addRowContent(rowElement){
-        this.addQuestion();
-        this.addScoreSelection();
-    }
 
     addQuestion(rowElement, questionContent){
         let question = document.createElement('div');
@@ -64,19 +70,19 @@ class SatisfactionForm{
     addScoreSelection(rowElement){
         let scoresContainer = document.createElement('div');
         scoresContainer.classList.add('form-scores');
-        let selectorGroupElement = this.addScores(rowElement, scoresContainer);
+        let selectorGroupElement = this.addScores(scoresContainer);
         rowElement.appendChild(selectorGroupElement)
     }
 
-    addScores(rowElement, selectorGroupElement){
+    addScores(selectorGroupElement){
         let scoresRange = [...Array(this.maxScaleNumber).keys()].map((_, i) => i + 1);
-        let groupName = `row${this.rowsCount + 1}`;
+        let groupName = `row${this.rowsCount}`;
         let median = Math.floor(scoresRange.length/2);
-        console.log(median)
         scoresRange.forEach( (_, i) => {
             let radioSelector = document.createElement('input');
             radioSelector.type = 'radio';
             radioSelector.name = groupName;
+            radioSelector.id = groupName + i;
             if( i == median ) radioSelector.checked = true;
             selectorGroupElement.appendChild(radioSelector);
         });
